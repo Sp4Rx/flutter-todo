@@ -63,9 +63,15 @@ class _TodoHomeState extends State<TodoHome> {
                 bloc: _bloc,
                 builder: (context, state) {
                   if (state is TodoLoading) {
-                    return const DefaultText('Loading...');
+                    return const Padding(
+                      padding: EdgeInsets.all(20),
+                      child: SmallText('Loading...'),
+                    );
                   } else if (state is TodoEmpty) {
-                    return const DefaultText('No todos. Please add some new');
+                    return const Padding(
+                      padding: EdgeInsets.all(20),
+                      child: SmallText('No todos. Please add some new'),
+                    );
                   } else if (state is TodoLoaded) {
                     final todos = state.todos;
                     return Flexible(
