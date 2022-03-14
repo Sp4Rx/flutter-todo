@@ -32,18 +32,32 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
           }
         } else if (event is AddTodo) {
           final newTodo = Todo(
-              id: todos.last.id != null ? todos.last.id! + 1 : 0,
+              id: todos.isNotEmpty ? todos.last.id! + 1 : 0,
               data: event.data,
               timestamp: DateTime.now().millisecondsSinceEpoch);
           todos.add(newTodo);
-          final newTodoString =
-              jsonEncode(todos.map((e) => e.toJson()).toList());
-          prefs.setString(key, newTodoString);
-          emit(TodoLoaded(todos));
+          _serialiseAndEmitTodos(prefs, emit);
+        } else if (event is DeleteTodo) {
+          if (todos.isEmpty) {
+            emit(TodoEmpty());
+          } else {
+            todos.removeWhere((element) => element.id == event.id);
+            _serialiseAndEmitTodos(prefs, emit);
+          }
         }
       } catch (e, stacktrace) {
         emit(TodoError());
       }
     });
+  }
+
+  _serialiseAndEmitTodos(prefs, emit) {
+    final newTodoString = jsonEncode(todos.map((e) => e.toJson()).toList());
+    prefs.setString(key, newTodoString);
+    if (todos.isNotEmpty) {
+      emit(TodoLoaded(todos));
+    } else {
+      emit(TodoEmpty());
+    }
   }
 }

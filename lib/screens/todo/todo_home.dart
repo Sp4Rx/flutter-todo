@@ -76,7 +76,11 @@ class _TodoHomeState extends State<TodoHome> {
                             date: DateTime.fromMillisecondsSinceEpoch(
                                     todo.timestamp!)
                                 .toString(),
-                            onDelete: () => {},
+                            onDelete: () => {
+                              _bloc.add(
+                                DeleteTodo(todo.id!),
+                              ),
+                            },
                             onEdit: () => {},
                           );
                         },

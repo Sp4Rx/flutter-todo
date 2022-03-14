@@ -11,4 +11,8 @@ class AddTodo extends TodoEvent {
   AddTodo(this.data);
 }
 
-class DeleteTodo extends TodoEvent {}
+class DeleteTodo extends TodoEvent {
+  final int id;
+
+  DeleteTodo(this.id);
+}
