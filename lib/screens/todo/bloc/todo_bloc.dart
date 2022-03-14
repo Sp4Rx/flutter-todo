@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo/repository/repo.dart';
 import 'package:todo/screens/todo/model/todo.dart';
 
 part 'todo_event.dart';
@@ -11,13 +11,14 @@ part 'todo_state.dart';
 class TodoBloc extends Bloc<TodoEvent, TodoState> {
   static const key = 'todos';
   List<Todo> todos = [];
+  Repo repo = Repo();
 
   TodoBloc() : super(TodoLoading()) {
     on<TodoEvent>((event, emit) async {
       try {
-        final prefs = await SharedPreferences.getInstance();
+        await repo.init();
         if (event is LoadTodos) {
-          final todosString = prefs.getString(key);
+          final todosString = repo.getData(key);
           if (todosString != null && todosString.isEmpty) {
             emit(TodoEmpty());
           } else {
@@ -36,13 +37,13 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
               data: event.data,
               timestamp: DateTime.now().millisecondsSinceEpoch);
           todos.add(newTodo);
-          _serialiseAndEmitTodos(prefs, emit);
+          emit(_serialiseAndEmit());
         } else if (event is DeleteTodo) {
           if (todos.isEmpty) {
             emit(TodoEmpty());
           } else {
             todos.removeWhere((element) => element.id == event.id);
-            _serialiseAndEmitTodos(prefs, emit);
+            emit(_serialiseAndEmit());
           }
         } else if (event is EditTodo) {
           final newTodo = Todo(
@@ -51,7 +52,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
               timestamp: DateTime.now().millisecondsSinceEpoch);
           todos.removeWhere((element) => element.id == event.id);
           todos.add(newTodo);
-          _serialiseAndEmitTodos(prefs, emit);
+          emit(_serialiseAndEmit());
         }
       } catch (e, stacktrace) {
         emit(TodoError());
@@ -59,13 +60,13 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     });
   }
 
-  _serialiseAndEmitTodos(prefs, emit) {
+  TodoState _serialiseAndEmit() {
     final newTodoString = jsonEncode(todos.map((e) => e.toJson()).toList());
-    prefs.setString(key, newTodoString);
+    repo.setData(key, newTodoString);
     if (todos.isNotEmpty) {
-      emit(TodoLoaded(todos));
+      return TodoLoaded(todos);
     } else {
-      emit(TodoEmpty());
+      return TodoEmpty();
     }
   }
 }
