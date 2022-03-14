@@ -41,11 +41,13 @@ class _TodoHomeState extends State<TodoHome> {
                 ),
               ),
             );
-            _bloc.add(
-              AddTodo(
-                result[0],
-              ),
-            );
+            if (result != null && result[0] != null) {
+              _bloc.add(
+                AddTodo(
+                  result[0],
+                ),
+              );
+            }
           }),
       body: SafeArea(
         child: Padding(
@@ -81,7 +83,25 @@ class _TodoHomeState extends State<TodoHome> {
                                 DeleteTodo(todo.id!),
                               ),
                             },
-                            onEdit: () => {},
+                            onEdit: () async {
+                              {
+                                final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditScreen(
+                                      editType: EditType.add,
+                                      textData: todo.data,
+                                    ),
+                                  ),
+                                );
+
+                                if (result != null && result[0] != null) {
+                                  _bloc.add(
+                                    EditTodo(todo.id!, result[0]),
+                                  );
+                                }
+                              }
+                            },
                           );
                         },
                         // itemCount: state.todos?.length ?? 0,

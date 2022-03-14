@@ -44,6 +44,14 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
             todos.removeWhere((element) => element.id == event.id);
             _serialiseAndEmitTodos(prefs, emit);
           }
+        } else if (event is EditTodo) {
+          final newTodo = Todo(
+              id: event.id,
+              data: event.data,
+              timestamp: DateTime.now().millisecondsSinceEpoch);
+          todos.removeWhere((element) => element.id == event.id);
+          todos.add(newTodo);
+          _serialiseAndEmitTodos(prefs, emit);
         }
       } catch (e, stacktrace) {
         emit(TodoError());

@@ -11,11 +11,13 @@ enum EditType {
 class EditScreen extends StatefulWidget {
   final EditType editType;
   final VoidCallback? onSubmit;
+  final String? textData;
 
   const EditScreen({
     Key? key,
     required this.editType,
     this.onSubmit,
+    this.textData,
   }) : super(key: key);
 
   @override
@@ -24,6 +26,12 @@ class EditScreen extends StatefulWidget {
 
 class _EditScreenState extends State<EditScreen> {
   TextEditingController controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.text = widget.textData ?? '';
+  }
 
   @override
   Widget build(BuildContext context) {
