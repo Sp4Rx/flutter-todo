@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/screens/main/bloc/main_bloc.dart';
 import 'package:todo/screens/splash_screen.dart';
-import 'package:todo/screens/todo_home.dart';
+import 'package:todo/screens/todo/todo_home.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);

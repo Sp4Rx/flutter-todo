@@ -28,6 +28,7 @@ class _EditScreenState extends State<EditScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: SafeArea(
         child: Container(
           width: double.infinity,
@@ -55,7 +56,9 @@ class _EditScreenState extends State<EditScreen> {
                 color: widget.editType == EditType.add
                     ? const Color(0xFF5748FF)
                     : const Color(0xFFA39C00),
-                onTap: () => {},
+                onTap: () => {
+                  Navigator.pop(context, [controller.text, widget.editType])
+                },
               ),
             ],
           ),
