@@ -11,3 +11,5 @@ class TodoLoaded extends TodoState {
 }
 
 class TodoEmpty extends TodoState {}
+
+class TodoError extends TodoState {}

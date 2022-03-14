@@ -5,6 +5,10 @@ abstract class TodoEvent {}
 
 class LoadTodos extends TodoEvent {}
 
-class AddTodo extends TodoEvent {}
+class AddTodo extends TodoEvent {
+  final String data;
+
+  AddTodo(this.data);
+}
 
 class DeleteTodo extends TodoEvent {}
